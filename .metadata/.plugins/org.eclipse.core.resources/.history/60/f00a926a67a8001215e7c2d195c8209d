@@ -1,0 +1,61 @@
+
+package com;
+
+
+
+
+public class YelpData
+{
+	public static class Vote
+	{
+		private String funny;
+		private String useful;
+		private String cool;
+		
+		public String getFunny() { return funny;}
+		public String getUseful() { return useful;}
+		public String getCool() { return cool;}
+		
+		public void SetFunny(String s) { funny = s;}
+		public void SetUseful(String s) { useful = s;}
+		public void SetCool(String s) { cool = s;}	
+	}
+	
+	private Vote votes;
+	public Vote getVote() { return votes;}
+	public void SetVote(Vote v) { votes = v; }
+	
+	
+//	private String user_id; 
+//	private String name;  
+//	private String url; 
+//	private String average_stars; 
+//	private String review_count;  
+//	private String type;
+	
+	
+	
+//	public String getUserid() { return user_id;}
+//	public String getName() { return name;}
+//	public String getUrl() { return url;}
+//	public String getAveragestars() { return average_stars;}
+//	public String getReviewcount() { return review_count;}
+//	public String getType() { return type;}
+//	
+//	public void SetUserid(String s) { user_id = s;}
+//	public void SetName(String s) { name = s;}
+//	public void SetUrl(String s) { url = s;}
+//	public void SetAveragestars(String s) { average_stars = s;}
+//	public void SetReviewcount(String s) { review_count = s;}
+//	public void SetType(String s) { type = s;}
+	
+	
+	
+	
+	
+	
+	
+	
+}
+
+

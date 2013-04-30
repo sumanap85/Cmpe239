@@ -1,0 +1,27 @@
+package com;
+
+public class Yelp
+{
+	public static void main(String[] args)
+	{
+		
+	}
+	
+	
+	public void t1()
+	{
+//		try 
+//		{
+//			long x = cfg.length();
+//			
+//			byte[] raw = new byte[(int) cfg.length()];
+//			br = new BufferedInputStream(new FileInputStream(cfg));
+//			br.read(raw);
+//			conf = JsonUtil.decode(new String(raw), ServerConf.class);
+//			ResourceFactory.initialize(conf);
+//		} 
+//		catch (Exception e) 
+//		{ }
+	}
+
+}

@@ -1,0 +1,12 @@
+package com;
+
+public class MatrixData 
+{
+	enum cats { Indian, Korean, Greek, Mediterranean, Chinese, French, Thai, Japanese, Mexican, Italian}
+	
+	int value;
+	
+	private String business_id;
+	
+	
+}

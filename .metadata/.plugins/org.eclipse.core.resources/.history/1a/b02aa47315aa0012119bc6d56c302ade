@@ -1,0 +1,57 @@
+package com;
+
+
+public class MatrixRow 
+{
+	enum cats { Indian(0), Korean(1), Greek(2), Mediterranean(3), Chinese(4), French(5), Thai(6), Japanese(7), Mexican(8), Italian(9)}
+	
+	public enum Currency {
+        PENNY(1), NICKLE(5), DIME(10), QUARTER(25);
+        private int value;
+
+        private Currency(int value) {
+                this.value = value;
+        }
+}; 
+
+
+	int value;
+	int[] cats = new int[10];
+	
+	private String business_id;
+	private String Cat;
+	
+	public MatrixRow(String busid, String cat)
+	{
+		this.business_id = busid;
+		
+	}
+	private void init(String cat)
+	{
+		if(cat.equals("Indian"))
+		{
+			cats[0] = 1;
+		}
+		if(cat.equals("Indian"))
+		{
+			cats[0] = 1;
+		}
+		if(cat.equals("Indian"))
+		{
+			cats[0] = 1;
+		}
+		if(cat.equals("Indian"))
+		{
+			cats[0] = 1;
+		}
+		if(cat.equals("Indian"))
+		{
+			cats[0] = 1;
+		}
+		if(cat.equals("Indian"))
+		{
+			cats[0] = 1;
+		}
+	}
+	
+}

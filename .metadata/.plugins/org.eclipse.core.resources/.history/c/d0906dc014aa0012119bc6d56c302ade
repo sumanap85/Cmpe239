@@ -1,0 +1,20 @@
+package com;
+
+
+public class MatrixRow 
+{
+	enum cats { Indian, Korean, Greek, Mediterranean, Chinese, French, Thai, Japanese, Mexican, Italian}
+	
+	int value;
+	int[] cats = new int[10];
+	
+	private String business_id;
+	private String Cat;
+	
+	public MatrixRow(String busid, int val)
+	{
+		this.business_id = busid;
+		this.value = val;
+	}
+	
+}

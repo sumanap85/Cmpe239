@@ -1,0 +1,39 @@
+package com.yelp;
+
+import java.util.List;
+
+
+public class UserBusiness 
+{
+	private List<String> listbus;
+	private List<String> listnear;
+
+	
+	private String user_id;
+	private String username;
+	private String userurl;
+	
+	public UserBusiness(String userid, List<String> listbus, List<String> listnear,
+						String name, String userurl)
+	{
+		this.user_id = userid;
+		this.listbus = listbus;
+		this.listnear = listnear;
+		this.username = name;
+		this.userurl = userurl;
+	}
+	public String getUserid()
+	{
+		return user_id;
+	}
+	public List<String> getBusinessIDs()
+	{
+		return listbus;
+	}
+	public List<String> getNear()
+	{
+		return listnear;
+	}
+	
+	
+}

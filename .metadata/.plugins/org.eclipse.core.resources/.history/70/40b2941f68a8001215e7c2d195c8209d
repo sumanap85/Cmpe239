@@ -1,0 +1,52 @@
+package com;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+public class Yelp
+{
+	public static void main(String[] args) throws JsonParseException, JsonMappingException
+	{
+		String f1 = "C:\\Users\\fred\\Documents\\SJSU\\CMPE 239\\final project\\abc.json";
+		String f2 = "C:\\Users\\fred\\Documents\\SJSU\\CMPE 239\\final project\\junk.json";
+		String f3 = "C:\\Users\\fred\\Documents\\SJSU\\CMPE 239\\final project\\v1.json";
+		ObjectMapper mapper = new ObjectMapper();
+		try 
+		{
+			YelpData user = mapper.readValue(new File(f3), YelpData.class);
+			//User user = mapper.readValue(new File(f2), User.class);
+			//System.out.println(user.getName());
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public void t1()
+	{
+		
+	}
+	public void t9()
+	{
+//		try 
+//		{
+//			long x = cfg.length();
+//			
+//			byte[] raw = new byte[(int) cfg.length()];
+//			br = new BufferedInputStream(new FileInputStream(cfg));
+//			br.read(raw);
+//			conf = JsonUtil.decode(new String(raw), ServerConf.class);
+//			ResourceFactory.initialize(conf);
+//		} 
+//		catch (Exception e) 
+//		{ }
+	}
+
+}

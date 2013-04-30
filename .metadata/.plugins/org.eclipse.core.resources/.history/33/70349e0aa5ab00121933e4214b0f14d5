@@ -1,0 +1,19 @@
+package com.yelp;
+
+
+
+public class BusinessDetail 
+{
+	
+	public String name;
+	public String address;
+	public String stars;
+	
+	public  BusinessDetail(String name, String address, String stars)
+	{
+		this.name = name;
+		this.address = address;
+		this.stars = stars;
+	}
+
+}

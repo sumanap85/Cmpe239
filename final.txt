@@ -1,0 +1,104 @@
+
+
+1. Get all the records in dataset3 ( business ) 6900 records.
+2. for all the records do:
+2.1 get business_id		"l7H8VGwc08dsqmgm_k7_gw"
+2.2 create a hashEntries
+2.3 collect all the records in the dataset2 ( review ) that have a matching busiiness_id
+
+business_id, user_id, cool, userful,funny, stars, date, type
+
+	 l7H8VGwc08dsqmgm_k7_gw  4VIPkNvGoPACST85sc01vg 0 2 0 1 2011-03-20 review
+	 l7H8VGwc08dsqmgm_k7_gw  1pYaKw-hSbi9pHP06TJzNg 0 2 1 3 2011-08-18 review
+	 l7H8VGwc08dsqmgm_k7_gw  De5DK1Q4mImcA4eF_z8JYA 0 1 0 1 2011-04-15 review
+	 l7H8VGwc08dsqmgm_k7_gw  u4Lb_y7OCkOJeS9QM1zPlA 0 0 0 1 2011-07-19 review
+	 l7H8VGwc08dsqmgm_k7_gw  OWUalEUNYj1W2VKWjLp3DQ 1 2 1 1 2011-04-25 review
+	 l7H8VGwc08dsqmgm_k7_gw  OWERbgAQoyPa5qFOA2HOsg 0 0 0 4 2011-04-15 review
+	 l7H8VGwc08dsqmgm_k7_gw  ZPCt3XYINKZb2pSw1-bmmQ 0 3 0 1 2011-08-04 review
+
+2.3.1 
+	for each record in the above list, select user_id and search in dataset2 ( review )
+	to collect all users that have this user_id
+	
+		4VIPkNvGoPACST85sc01vg l7H8VGwc08dsqmgm_k7_gw  0 2 0 1 2011-03-20 review
+		1pYaKw-hSbi9pHP06TJzNg l7H8VGwc08dsqmgm_k7_gw  0 2 1 3 2011-08-18 review
+		1pYaKw-hSbi9pHP06TJzNg BvqXdJ4iadG5BfMWExX5dw  1 4 1 4 2011-09-06 review
+		1pYaKw-hSbi9pHP06TJzNg Rz_EYBuygGYz-xCRZ7042g  1 1 0 5 2006-01-10 review
+		De5DK1Q4mImcA4eF_z8JYA l7H8VGwc08dsqmgm_k7_gw  0 1 0 1 2011-04-15 review
+		u4Lb_y7OCkOJeS9QM1zPlA l7H8VGwc08dsqmgm_k7_gw  0 0 0 1 2011-07-19 review
+		OWUalEUNYj1W2VKWjLp3DQ l7H8VGwc08dsqmgm_k7_gw  1 2 1 1 2011-04-25 review
+		OWERbgAQoyPa5qFOA2HOsg mUGiS3OAHFax0saS6k0vVA  0 0 0 4 2011-03-18 review
+		OWERbgAQoyPa5qFOA2HOsg G9A4F5Oi2v0lEkqf27Igzg  0 0 0 2 2011-05-05 review
+		OWERbgAQoyPa5qFOA2HOsg tiQTQnIwoT92v6pRQH9SUQ  0 1 0 5 2011-04-22 review
+		OWERbgAQoyPa5qFOA2HOsg l7H8VGwc08dsqmgm_k7_gw  0 0 0 4 2011-04-15 review
+		ZPCt3XYINKZb2pSw1-bmmQ l7H8VGwc08dsqmgm_k7_gw  0 3 0 1 2011-08-04 review
+		size 1
+		size 3
+		size 1
+		size 1
+		size 1
+		size 4
+		size 1
+
+2.3.1.1
+	for each record in the above:
+	HASH-Processing:
+		hash keys are based on business_id
+		if hash contains the business_id
+			get the object from hash
+			add user_id to the list of users
+			add user_id, and the single record from above int the internal hash
+			Hashtable<String,YelpDataSet2> userreviews;
+			place the updated object back into hash
+		if hash does not contain the business_id,
+			create an item as before and add to the hash.
+	Note this hash becomes the collection of all businesses for which each user in 
+	step 2.3.1 has made a comment. It will have diferent bueinss_ids.
+
+			
+2.4
+	Get a hash object for the same business_id that the processing started.	
+	"l7H8VGwc08dsqmgm_k7_gw"
+2.5
+	Create a clusers ( list ) from all the users in the hash for the above business.
+	
+2.6
+	Get a list of business from dataset2 ( reviews ) for the same business_id
+		"l7H8VGwc08dsqmgm_k7_gw"
+2.7
+	Loop through the list and sum up all the stars for this business_id.
+2.8
+	In the hash object for this business_id obtained from step 2.4, set the rating by 
+	dividing the the sum in step 2.7 by the total size of entries in dataset2 for that 	business.
+
+	Note:
+	We started with a business_id and found a list of them in the revieew dataset.
+	from this list we picked up each individual user , we created a hash that contains
+	a list of all the business for which this user has a review. if the hash contains the
+	same business then updated the comment else create a new entry for this business and
+	add their review. So a business may have reviews from different users and this is reflect 		in the hash by adding a users to the list of that paritcular business_id object and adding 	a review record. For example, 
+		1pYaKw-hSbi9pHP06TJzNg l7H8VGwc08dsqmgm_k7_gw  0 2 1 3 2011-08-18 review
+		1pYaKw-hSbi9pHP06TJzNg BvqXdJ4iadG5BfMWExX5dw  1 4 1 4 2011-09-06 review
+		1pYaKw-hSbi9pHP06TJzNg Rz_EYBuygGYz-xCRZ7042g  1 1 0 5 2006-01-10 review
+	this user has review for three different business and the hash will contain object for 		each buinessss.
+
+2.9
+	So from the business that we found in the hash, we searched dataset2 ( review again )	
+	got a list of that business and added up the stars and divided by total number of records 	and updated its aveage in the hash.
+
+3.0
+	for each key ( business_id) in the hash do the same thing as above, find a list in 	dataset2 and add the stars and divide by total and updated the hash object average rating.
+	
+
+3.1 	for each key if the key does not eqaul our original business_id,
+		get all the users for this hash object
+		intersect the userlist of this object  with the user list obtained in step in 2.5
+3.2
+	for compare1 ( hash object ) get the user stars for this business
+		1pYaKw-hSbi9pHP06TJzNg l7H8VGwc08dsqmgm_k7_gw  0 2 1 3 2011-08-18 review and 
+	subtract it from compare1 aveage rating.
+	Do the same for compare 2 . 
+		
+		
+					
+		

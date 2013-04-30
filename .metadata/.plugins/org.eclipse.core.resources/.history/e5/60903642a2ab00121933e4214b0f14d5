@@ -1,0 +1,12 @@
+package com.yelp;
+
+
+
+public class BusinessDetail 
+{
+	
+	public String name;
+	public String address;
+	public String stars;
+
+}

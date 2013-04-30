@@ -1,0 +1,34 @@
+package com.yelp;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.codehaus.jackson.map.ObjectMapper;
+
+
+
+public class BusinessDetail 
+{
+	// user
+	private String user_id; 
+	private String user_name;
+	private String user_url; 
+	//private String user_average_stars; 
+	//private String user_review_count;  
+	
+	
+	
+	private List<String> list_business;
+
+	
+	
+	public  BusinessDetail(String user_id, String user_name, String user_url)
+	{
+		
+	
+	}
+	
+}

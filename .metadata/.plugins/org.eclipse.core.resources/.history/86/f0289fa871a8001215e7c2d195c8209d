@@ -1,0 +1,78 @@
+package com;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+public class Yelp
+{
+	public static void main(String[] args) throws JsonParseException, JsonMappingException
+	{
+		String d1 = "C:\\Users\\fred\\Documents\\SJSU\\CMPE 239\\final project\\yelpdataset1.txt";
+		String d2 = "C:\\Users\\fred\\Documents\\SJSU\\CMPE 239\\final project\\yelpdataset2.txt";
+		
+		Yelp y = new Yelp();
+		//y.dataset1(d1);
+		y.dataset2(d2);
+		
+	}
+	
+	
+	public void dataset1(String filename)
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		try 
+		{
+			Iterator<YelpDataSet1> it = mapper.reader(YelpDataSet1.class).readValues(new File(filename));
+			while (it.hasNext())
+		    {
+				YelpDataSet1 d = it.next();
+				System.out.println(d.name);
+				System.out.println(d.getUserid());	
+		    }	
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	public void dataset2(String filename)
+	{
+		ObjectMapper mapper = new ObjectMapper();
+		try 
+		{
+			Iterator<YelpDataSet2> it = mapper.reader(YelpDataSet2.class).readValues(new File(filename));
+			while (it.hasNext())
+		    {
+				YelpDataSet2 d = it.next();
+				System.out.println(d.business_id);
+				System.out.println(d.getUserid());	
+				System.out.println(d.getReviewid());
+		    }	
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	public void t9()
+	{
+//		try 
+//		{
+//			long x = cfg.length();
+//			
+//			byte[] raw = new byte[(int) cfg.length()];
+//			br = new BufferedInputStream(new FileInputStream(cfg));
+//			br.read(raw);
+//			conf = JsonUtil.decode(new String(raw), ServerConf.class);
+//			ResourceFactory.initialize(conf);
+//		} 
+//		catch (Exception e) 
+//		{ }
+	}
+
+}

@@ -1,0 +1,37 @@
+
+package com;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+public class YelpData
+{
+	
+	public static class Votes
+	{
+		private String funny;
+		private String useful;
+		private String cool;
+		
+		public String getFunny() { return funny;}
+		public String getUseful() { return useful;}
+		public String getCool() { return cool;}
+		
+		public void SetFunny(String s) { funny = s;}
+		public void SetUseful(String s) { useful = s;}
+		public void SetCool(String s) { cool = s;}
+		
+		
+		
+	}
+	
+	
+}
+
+

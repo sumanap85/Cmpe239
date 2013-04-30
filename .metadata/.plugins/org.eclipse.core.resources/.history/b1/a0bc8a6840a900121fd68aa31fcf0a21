@@ -1,0 +1,381 @@
+package com;
+
+
+import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.codehaus.jackson.map.ObjectMapper;
+
+//import com.google.code.morphia.Datastore;
+//import com.google.code.morphia.Morphia;
+//import com.google.code.morphia.query.Query;
+//import com.mongodb.Mongo;
+//import com.mongodb.MongoException;
+//import com.yelp.entities.YelpBusiness;
+//import com.yelp.entities.YelpReview;
+//import com.yelp.entities.YelpSimilarity;
+
+/*
+ *   from dataset3 get a list of all businss id. (Query1)
+ *   for each busines_id search dataset2 and get a list of that particular business 
+ *   
+ *   	bus_id					user_id
+ *   l7H8VGwc08dsqmgm_k7_gw  4VIPkNvGoPACST85sc01vg 0 2 0 1 2011-03-20 review
+	 l7H8VGwc08dsqmgm_k7_gw  1pYaKw-hSbi9pHP06TJzNg 0 2 1 3 2011-08-18 review
+	 l7H8VGwc08dsqmgm_k7_gw  De5DK1Q4mImcA4eF_z8JYA 0 1 0 1 2011-04-15 review
+	 l7H8VGwc08dsqmgm_k7_gw  u4Lb_y7OCkOJeS9QM1zPlA 0 0 0 1 2011-07-19 review
+	 l7H8VGwc08dsqmgm_k7_gw  OWUalEUNYj1W2VKWjLp3DQ 1 2 1 1 2011-04-25 review
+	 l7H8VGwc08dsqmgm_k7_gw  OWERbgAQoyPa5qFOA2HOsg 0 0 0 4 2011-04-15 review
+	 l7H8VGwc08dsqmgm_k7_gw  ZPCt3XYINKZb2pSw1-bmmQ 0 3 0 1 2011-08-04 review
+	 
+	 for each user_id in the above list, scan dataset2 and collect all users with that user_id:
+	 
+	 	4VIPkNvGoPACST85sc01vg l7H8VGwc08dsqmgm_k7_gw  0 2 0 1 2011-03-20 review
+		1pYaKw-hSbi9pHP06TJzNg l7H8VGwc08dsqmgm_k7_gw  0 2 1 3 2011-08-18 review
+		1pYaKw-hSbi9pHP06TJzNg BvqXdJ4iadG5BfMWExX5dw  1 4 1 4 2011-09-06 review
+		1pYaKw-hSbi9pHP06TJzNg Rz_EYBuygGYz-xCRZ7042g  1 1 0 5 2006-01-10 review
+		De5DK1Q4mImcA4eF_z8JYA l7H8VGwc08dsqmgm_k7_gw  0 1 0 1 2011-04-15 review
+		u4Lb_y7OCkOJeS9QM1zPlA l7H8VGwc08dsqmgm_k7_gw  0 0 0 1 2011-07-19 review
+		OWUalEUNYj1W2VKWjLp3DQ l7H8VGwc08dsqmgm_k7_gw  1 2 1 1 2011-04-25 review
+		OWERbgAQoyPa5qFOA2HOsg mUGiS3OAHFax0saS6k0vVA  0 0 0 4 2011-03-18 review
+		OWERbgAQoyPa5qFOA2HOsg G9A4F5Oi2v0lEkqf27Igzg  0 0 0 2 2011-05-05 review
+		OWERbgAQoyPa5qFOA2HOsg tiQTQnIwoT92v6pRQH9SUQ  0 1 0 5 2011-04-22 review
+		OWERbgAQoyPa5qFOA2HOsg l7H8VGwc08dsqmgm_k7_gw  0 0 0 4 2011-04-15 review
+		ZPCt3XYINKZb2pSw1-bmmQ l7H8VGwc08dsqmgm_k7_gw  0 3 0 1 2011-08-04 review
+		
+	note that each user_id has multiple entries for 
+	 
+	 the result of hashmap:
+	 for this business, there is a list of user id that have average rating and similarity of 0.
+	 l7H8VGwc08dsqmgm_k7_gw
+	 [4VIPkNvGoPACST85sc01vg, 1pYaKw-hSbi9pHP06TJzNg, De5DK1Q4mImcA4eF_z8JYA, u4Lb_y7OCkOJeS9QM1zPlA, OWUalEUNYj1W2VKWjLp3DQ, OWERbgAQoyPa5qFOA2HOsg, ZPCt3XYINKZb2pSw1-bmmQ]
+	 0.0
+     0.0
+	 
+ * 
+ * 
+ */
+public class ItemItemFiltering 
+{
+	private String d1 = "C:\\Users\\fred\\Documents\\SJSU\\CMPE 239\\final project\\yelpdataset1.txt";	// users and reviews.
+	private String d2 = "C:\\Users\\fred\\Documents\\SJSU\\CMPE 239\\final project\\yelpdataset2.txt";	// business id , user id, review id and full text of the review. Review object in original code.
+	private String d3 = "C:\\Users\\fred\\Documents\\SJSU\\CMPE 239\\final project\\yelpdataset3.txt";	// business data
+	private List<YelpDataSet1> list_alldata1;	
+	private List<YelpDataSet2> list_alldata2;		
+	private List<YelpDataSet3> list_alldata3; 	
+	private List<YelpSimilarity> list_similar;
+	private List<HashMap<String,HashObject>> list_masterhashEntries;
+	
+	public ItemItemFiltering()
+	{
+		list_alldata1 = dataset1(d1);		
+		list_alldata2 = dataset2(d2);		
+		list_alldata3 = dataset3(d3);	// query in original code 	
+		list_similar = new ArrayList<YelpSimilarity>();
+		list_masterhashEntries = new ArrayList<HashMap<String,HashObject>>();
+	}
+	public static void main(String args[]) 
+	{
+		
+		 ItemItemFiltering obj = new  ItemItemFiltering();
+		 
+		 List<YelpDataSet2> testReviews = new ArrayList<YelpDataSet2>();
+		 
+		 for(YelpDataSet3 item : obj.list_alldata3 )		// line 43 in original code
+		 {
+			 String business_id = item.getBusinessid();
+			 // for each business id create a HashObject that contains, business_id, userid and their reviews
+			 HashMap<String,HashObject> hashEntries = new HashMap<String,HashObject>();
+			
+			 
+			 //System.out.println(item.getBusinessid());
+			 testReviews = obj.getListBusiness(business_id);   //  Query 1 line 49 get a list of business entries in dataset2. dataset 2 contains the reviews for business 
+			 
+			 for(YelpDataSet2 record : testReviews)
+			 {
+				 List<YelpDataSet2> relatedReviews = obj.getUserReviews(record.getUserid());
+				 obj.PrintReviews2(relatedReviews);
+				 for (YelpDataSet2 eachReview1 : relatedReviews)
+				 {
+					 if (hashEntries.containsKey(eachReview1.getBusinessid()))
+					 {
+						HashObject temp = hashEntries.get(eachReview1.getBusinessid());
+						temp.getUsers().add(eachReview1.getUserid());
+						//temp.setRating_sum(temp.getRating_sum()+eachReview1.getStars());
+						temp.getUserreviews().put(eachReview1.getUserid(),eachReview1);
+						hashEntries.put(eachReview1.getBusinessid(), temp);
+					}
+					else
+					{
+						HashObject temp = new HashObject(eachReview1.getBusinessid());
+						temp.getUsers().add(eachReview1.getUserid());
+						//temp.setRating_sum(temp.getRating_sum()+eachReview1.getStars());
+						temp.getUserreviews().put(eachReview1.getUserid(),eachReview1);
+						hashEntries.put(eachReview1.getBusinessid(), temp);
+					}
+				} 
+			 }
+			 
+			 HashObject compare1 = hashEntries.get(business_id);
+			 //compare1.toString();
+			 
+			 if (compare1 != null)
+			 {
+				 List<String> c1users;
+				 if (compare1.getUsers()!= null)
+					c1users = compare1.getUsers();	// [user1,user2,.....]
+				 else
+					c1users = new LinkedList<String>();
+				
+				 // get the list of buiness_id ,  using the business_id in the map. call this cluster review "clReviews".
+				 List<YelpDataSet2> c1Reviews = obj.getClusterReviews(compare1.getBusinessid());
+				 
+				 int c1starSum = 0; 
+				 double c1avg = 0.0;
+				
+				 for (YelpDataSet2 eachReview: c1Reviews)
+				 {	
+					c1starSum += Integer.parseInt(eachReview.getStars());							// for the buiness_id that was in the map sum up the stars.
+				 }
+				
+				 if (c1Reviews.size() > 0 )
+				 {
+					compare1.setRating_avg((double)c1starSum/(double)c1Reviews.size());				// set the rating in the map object.
+				 }
+				 //	double c1avg = compare1.getRating_avg()/c1users.size();
+				 for (String eachKey: hashEntries.keySet())				 							// start comparing this object with others in the map
+				 {
+					 HashObject compare2 = hashEntries.get(eachKey);
+					
+					 List<YelpDataSet2> c2Reviews = obj.getClusterReviews(compare2.getBusinessid());  	// find the business_id in dataset     
+					
+					 int starSum = 0; 
+					 double avg = 0.0;
+					 for (YelpDataSet2 eachReview: c2Reviews)
+					 {
+						 starSum += Integer.parseInt(eachReview.getStars());							
+					 }
+					 if (c2Reviews.size() > 0 )
+					 {
+						 compare2.setRating_avg((double)starSum/(double)c2Reviews.size());				// set the rating of this object in the map
+					 }
+					 if(!eachKey.equals(business_id))
+					 {
+						 List<String> temp = compare2.getUsers();
+						 //	double c2avg = compare2.getRating_avg()/temp.size();
+						 temp.retainAll(c1users);
+						 double similarity = 0.0;
+						 double nr = 0.0, drp1= 0.0, drp2 = 0.0;
+						 for (String eachReview: temp)
+						 {
+							 double part1 = Double.parseDouble(compare1.getUserreviews().get(eachReview).getStars()) - compare1.getRating_avg();
+							 double part2 = Double.parseDouble(compare2.getUserreviews().get(eachReview).getStars()) - compare2.getRating_avg();
+							 nr = nr + (part1*part2);
+							 drp1 = drp1 + Math.pow(part1, 2);
+							 drp2 = drp2 + Math.pow(part2, 2);
+						 }
+						 if ((drp1 >0.0)&&(drp2>0.0))
+						 {
+							 similarity = nr/ ((Math.pow(drp1, 0.5))*(Math.pow(drp2, 0.5)));
+							 compare2.setSimilarity(similarity);
+							 hashEntries.put(eachKey, compare2);
+						 }
+					 }
+				 }
+				 List<HashObject> beforeSort = new ArrayList<HashObject>(hashEntries.values());
+				 Collections.sort(beforeSort);
+				 //System.out.println(hashEntries);
+				 YelpSimilarity s = new YelpSimilarity();
+				 s.setBusiness_id(compare1.getBusinessid());
+				 int count = 30;
+				 for (HashObject eachKey: beforeSort)
+				 {
+					 if ((count > 0) && (eachKey.getSimilarity()> 0 ))
+					 {
+						//HashObject obj = hashEntries.get(eachKey);
+						//eachKey.toString();
+
+						s.getSimilar_business().put(eachKey.getBusinessid(), eachKey.getSimilarity());
+						obj.list_similar.add(s);
+						count--;
+					}
+				 }
+				 obj.list_masterhashEntries.add(hashEntries);
+			}
+			 
+			 
+			 //break;
+			 
+		 }
+		 //obj.PrintReviews(testReviews);
+		 //System.out.println();
+		 //obj.PrintMap(MasterhashEntries);
+		 System.out.println("-----------------------------------------");
+		 for(YelpSimilarity d : obj.list_similar)
+		 {
+			 HashMap<String, Double> mp = d.getSimilar_business();
+			 Iterator it = mp.entrySet().iterator();
+			 while (it.hasNext()) 
+			  {
+			        Map.Entry pairs = (Map.Entry)it.next();
+			        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+			        //it.remove(); // avoids a ConcurrentModificationException
+			  }
+		 }
+	}
+	public List<YelpDataSet2> getClusterReviews(String businessid)
+	{
+		List<YelpDataSet2> list = new ArrayList<YelpDataSet2>(); 
+		for(YelpDataSet2 d : list_alldata2)
+		{
+			if( d.getBusinessid().equals(businessid))
+			{
+				list.add(d);	
+			}
+		}
+		return list;	
+	}
+	public List<YelpDataSet2> getUserReviews(String userid)
+	{
+		List<YelpDataSet2> list = new ArrayList<YelpDataSet2>(); 
+		for(YelpDataSet2 d : list_alldata2)
+		{
+			if( d.getUserid().equals(userid))
+			{
+				list.add(d);	
+			}
+		}
+		return list;
+	}
+//	public void AddUserReview(HashMap<String,HashObject> hashEntries, List<YelpDataSet2> list_reviews)
+//	{
+//		for (YelpDataSet2 eachReview1 : list_reviews)
+//		{
+//			if (hashEntries.containsKey(eachReview1.getBusinessid()))
+//			{
+//				HashObject temp = hashEntries.get(eachReview1.getBusinessid());
+//				temp.getUsers().add(eachReview1.getUserid());
+//				//temp.setRating_sum(temp.getRating_sum()+eachReview1.getStars());
+//				temp.getUserreviews().put(eachReview1.getUserid(),eachReview1);
+//				hashEntries.put(eachReview1.getBusinessid(), temp);
+//			}
+//			else
+//			{
+//				HashObject temp = new HashObject(eachReview1.getBusinessid());
+//				temp.getUsers().add(eachReview1.getUserid());
+//				//temp.setRating_sum(temp.getRating_sum()+eachReview1.getStars());
+//				temp.getUserreviews().put(eachReview1.getUserid(),eachReview1);
+//				hashEntries.put(eachReview1.getBusinessid(), temp);
+//			}
+//
+//		}
+//		
+//	}
+	public void PrintMap(HashMap<String,HashObject> hashEntries)
+	{
+		System.out.println(hashEntries);
+		for (String eachKey: hashEntries.keySet())
+		{
+			HashObject obj = hashEntries.get(eachKey);
+			obj.toString();
+		} 
+		
+	}
+	public void PrintReviews2(List<YelpDataSet2> data)
+	{
+		for(YelpDataSet2 item : data)
+		 {
+			 System.out.println(item.getUserid() + " " + item.getBusinessid() + "  " + item.getVote().getCool() + " " + item.getVote().getUseful() + " " + item.getVote().getFunny() + " " + item.getStars() + " " + item.getDate() + " " + item.getType());
+			 
+		 }
+	}
+	public void PrintReviews(List<YelpDataSet2> data)
+	{
+		for(YelpDataSet2 item : data)
+		 {
+			 System.out.println(item.getBusinessid() + "  " + item.getUserid() + " " + item.getVote().getCool() + " " + item.getVote().getUseful() + " " + item.getVote().getFunny() + " " + item.getStars() + " " + item.getDate() + " " + item.getType());
+			 
+		 }
+	}
+	public List<YelpDataSet2> getListBusiness(String businessid)
+	{
+		List<YelpDataSet2> list_business = new ArrayList<YelpDataSet2>(); 
+		for(YelpDataSet2 d : list_alldata2)
+		{
+			if( d.getBusinessid().equals(businessid))
+			{
+				list_business.add(d);	
+			}
+		}
+		return list_business;
+	}
+	public List<YelpDataSet1> dataset1(String filename)
+	{
+		List<YelpDataSet1> data = new ArrayList<YelpDataSet1>();	
+		ObjectMapper mapper = new ObjectMapper();
+		try 
+		{
+			Iterator<YelpDataSet1> it = mapper.reader(YelpDataSet1.class).readValues(new File(filename));
+			while (it.hasNext())
+		    {
+				YelpDataSet1 d = it.next();
+				data.add(d);
+		    }	
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return data;
+	}
+	public List<YelpDataSet2> dataset2(String filename)
+	{
+		List<YelpDataSet2> data = new ArrayList<YelpDataSet2>();	
+		ObjectMapper mapper = new ObjectMapper();
+		try 
+		{
+			Iterator<YelpDataSet2> it = mapper.reader(YelpDataSet2.class).readValues(new File(filename));
+			while (it.hasNext())
+		    {
+				YelpDataSet2 d = it.next();
+				data.add(d);
+		    }	
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return data;
+	}
+	public List<YelpDataSet3> dataset3(String filename)
+	{
+		List<YelpDataSet3> data = new ArrayList<YelpDataSet3>();	
+		ObjectMapper mapper = new ObjectMapper();
+		try 
+		{
+			Iterator<YelpDataSet3> it = mapper.reader(YelpDataSet3.class).readValues(new File(filename));
+			while (it.hasNext())
+		    {
+				YelpDataSet3 d = it.next();
+				data.add(d);
+		    }	
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return data;
+	}
+
+
+
+}
+

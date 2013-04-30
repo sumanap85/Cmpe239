@@ -1,0 +1,72 @@
+package com;
+
+
+public class MatrixRow 
+{
+	//enum cats { }
+	
+//	public enum cats {
+//		Indian(0), Korean(1), Greek(2), Mediterranean(3), Chinese(4), French(5), Thai(6), Japanese(7), Mexican(8), Italian(9);
+//        private int value;
+//
+//        private cats(int value) {
+//                this.value = value;
+//        }
+//}; 
+
+
+	int[] cats = new int[10];
+	
+	private String business_id;
+	
+	public MatrixRow(String busid, String cat)
+	{
+		this.business_id = busid;
+		init(cat);	
+	}
+	private void init(String strcat)
+	{
+		if(strcat.equals("Indian"))
+		{
+			cats[0] = 1;
+		}
+		if(strcat.equals("Korean"))
+		{
+			cats[1] = 1;
+		}
+		if(strcat.equals("Greek"))
+		{
+			cats[2] = 1;
+		}
+		if(strcat.equals("Mediterranean"))
+		{
+			cats[3] = 1;
+		}
+		if(strcat.equals("Chinese"))
+		{
+			cats[4] = 1;
+		}
+		if(strcat.equals("French"))
+		{
+			cats[5] = 1;
+		}
+		if(strcat.equals("Thai"))
+		{
+			cats[6] = 1;
+		}
+		if(strcat.equals("Japanese"))
+		{
+			cats[7] = 1;
+		}
+		if(strcat.equals("Mexican"))
+		{
+			cats[8] = 1;
+		}
+		if(strcat.equals("Italian"))
+		{
+			cats[9] = 1;
+		}
+		
+	}
+	
+}

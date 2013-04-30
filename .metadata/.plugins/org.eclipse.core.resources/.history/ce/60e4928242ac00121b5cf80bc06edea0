@@ -1,0 +1,57 @@
+<%@ page import="java.sql.*"%>
+<%@ page import="javax.imageio.*"%>
+<%@ page import="java.awt.image.BufferedImage"%>
+<%@ page import="java.io.ByteArrayInputStream"%>
+<%@ page import="java.util.List"%>
+<%@ page import="javax.xml.bind.*"%>
+<%@ page import="com.yelp.*"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+detailll
+
+<%
+        				
+		List<BusinessDetail> list  =  (List<BusinessDetail>)  request.getSession().getAttribute("showbb");
+		if( b != null)
+		{
+			for(BusinessDetail x : b)
+			{
+				if( x.getUserid().equals("5wP11xB6tCITP8WF6S5AsQ"))
+				{
+					List<BusinessData> listx = x.getBusinessData();
+					for(BusinessData y : listx)
+					{
+						System.out.println("servlet " + y.getBusinessAddress());
+						System.out.println("servlet " +  y.getBusinessName());
+						System.out.println("servlet" + y.getBusinessStars());
+						System.out.println("servlet" + y.getBusinessID());
+					}
+				}
+			}
+		}
+
+		%>
+		
+		<c:forEach items="${list}" var="user" varStatus="loop">
+			<tr>
+				<td>"${list.getBusinessData().getBusinessAddress()}"</td>
+				
+			</tr>
+        </c:forEach>
+        			
+
+
+</body>
+</html>

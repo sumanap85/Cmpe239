@@ -1,0 +1,26 @@
+package com;
+
+import java.util.List;
+
+
+public class UserBusiness 
+{
+	private List<Integer> listbus;
+	
+	private String user_id;
+	
+	public UserBusiness(String userid, List<Integer> listbus)
+	{
+		this.user_id = userid;
+		this.listbus = listbus;
+	}
+	public String getUerid()
+	{
+		return user_id;
+	}
+	public List<Integer> getBusinessIDs()
+	{
+		return listbus;
+	}
+	
+}

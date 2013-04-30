@@ -1,0 +1,74 @@
+package sjsu.cmpe275.web;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.yelp.BusinessData;
+import com.yelp.BusinessDetail;
+
+/**
+ * Servlet implementation class MainServlet
+ */
+@WebServlet("/MainServlet")
+public class MainServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public MainServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		Object b =  request.getAttribute("showb");
+		if( b != null)
+		{
+			System.out.println(" from servlet b is not null");
+		}
+		else
+			System.out.println(" from servlet b is null" );
+		
+		List<BusinessDetail> list  =  (List<BusinessDetail>)  request.getSession().getAttribute("showbb");
+		if( list != null)
+		{
+			for(BusinessDetail x : b)
+			{
+				if( x.getUserid().equals("5wP11xB6tCITP8WF6S5AsQ"))
+				{
+    				List<BusinessData> listx = x.getBusinessData();
+    				for(BusinessData y : listx)
+    				{
+    					System.out.println(y.getBusinessAddress());
+    					System.out.println(y.getBusinessName());
+    					System.out.println(y.getBusinessStars());
+    					System.out.println(y.getBusinessID());
+    				}
+				}
+			}
+		}
+
+		
+		
+		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	}
+
+}

@@ -1,0 +1,67 @@
+package sjsu.cmpe275.web;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.ejb.EJB;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import sjsu.cmpe275.ejb.DBSession;
+
+/**
+ * Servlet implementation class LoginServlet
+ */
+@WebServlet("/LoginServlet")
+public class LoginServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public LoginServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request,response);
+	}
+
+	@EJB
+	DBSession ts;
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+	{
+		PrintWriter out = response.getWriter();
+		String name = request.getParameter("fname");
+		String pwd  = request.getParameter("password");
+		if(name != null && pwd != null)
+		{
+			String userid = ts.Login(name, pwd);
+			request.getSession().setAttribute("userid", userid);
+			
+			List<String> idlist = ts.GetImageID(userid);
+			request.getSession().setAttribute("idlist", idlist);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/main.jsp?login=" + name);
+			try 
+			{
+				rd.forward(request, response);
+			} 
+			catch (ServletException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+}
